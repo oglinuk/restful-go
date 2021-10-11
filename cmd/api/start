@@ -1,0 +1,8 @@
+#!/bin/bash
+
+api() {
+	rm library.db cfg.yaml
+	go run main.go
+}
+
+$*

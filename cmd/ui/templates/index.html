@@ -1,0 +1,30 @@
+<!DOCTYPE HTML>
+<html lang="en">
+
+<head>
+    <title>RESTful Golang</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="Cache-Control" content="no-cache, no-store" />
+</head>
+
+<body class="body">
+    <main>
+        <table>
+					<tr>
+						<th>Title</th>
+						<th>Author</th>
+						<th>Published</th>
+					</tr>
+          {{ range .Books}}
+					<tr>
+          	<td><a href="/{{.ID}}">{{ .Title}}</a></td>
+						<td>{{ .Author }}</td>
+						<td>{{ .Published }}</td>
+					</tr>
+          {{ end }}
+        </table>
+    </main>
+</body>
+
+</html>
