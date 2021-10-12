@@ -1,0 +1,35 @@
+#!/bin/bash
+
+api() {
+	cd ./cmd/api
+	go build && ./api
+}
+
+dapi() {
+	API="restful-api"
+	docker build . -t ${API}
+	docker run -d -p 9001:9001 ${API}
+}
+
+ui() {
+	cd ./cmd/ui
+	go build && ./ui
+}
+
+app() {
+	api&
+	ui&
+}
+
+clean() {
+	killall api ui
+	rm ./cmd/api/api ./cmd/api/cfg.yaml ./cmd/api/library.db
+	rm ./cmd/ui/ui
+}
+
+
+dcompose() {
+	docker-compose up --build
+}
+
+$*

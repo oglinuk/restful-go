@@ -1,0 +1,20 @@
+version: '3.7'
+services:
+  ui:
+    container_name: ui
+    build: ./cmd/ui
+    ports:
+      - 9042:9042
+    depends_on:
+      - api
+    networks:
+      - tiered
+  api:
+    container_name: api
+    build: .
+    ports:
+      - 9001:9001
+    networks:
+      - tiered
+networks:
+  tiered:

@@ -12,7 +12,16 @@ gopkg.in/yaml.v3 v3.0.0-20210107192922-496545a6307b (for configuration)
 
 ## Getting Started
 
-In `cmd/api` run `./start api`, then in `cmd/ui` run `./start ui`.
+`./init app`
+
+### With `docker`
+
+`./init dapi && ./init ui`
+
+### With `docker-compose`
+
+`./init dcompose`
+
 
 Once both are running go to [`localhost:9042`](http://localhost:9042). If
 you want to access the page from other devices on the network, goto

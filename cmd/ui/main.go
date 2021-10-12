@@ -18,10 +18,11 @@ func main() {
 		br, err := getBooks()
 		if err != nil {
 			http.Error(w, err.Error(), 500)
-		}
-		err = tpl.ExecuteTemplate(w, "index.html", br)
-		if err != nil {
-			http.Error(w, err.Error(), 500)
+		} else {
+			err = tpl.ExecuteTemplate(w, "index.html", br)
+			if err != nil {
+				http.Error(w, err.Error(), 500)
+			}
 		}
 	})
 
