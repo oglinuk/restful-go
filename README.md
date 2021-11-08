@@ -14,9 +14,13 @@ gopkg.in/yaml.v3 v3.0.0-20210107192922-496545a6307b (for configuration)
 
 `./init app`
 
+`./init clean` to stop the application
+
 ### With `docker`
 
 `./init dapi && ./init ui`
+
+`./init dclean` to stop/rm the docker container
 
 ### With `docker-compose`
 

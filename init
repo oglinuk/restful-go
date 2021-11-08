@@ -18,7 +18,7 @@ ui() {
 
 app() {
 	api&
-	ui&
+	ui
 }
 
 clean() {
@@ -30,6 +30,10 @@ clean() {
 
 dcompose() {
 	docker-compose up --build
+}
+
+dclean() {
+	docker stop restful-api && docker rm restful-api
 }
 
 $*
