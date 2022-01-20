@@ -17,7 +17,13 @@ func TestNewBooksRepo(t *testing.T) {
 
 func TestInsert(t *testing.T) {
 	br := NewBooksRepo(database.Open(defaultBookSchema))
-	err := br.Insert(models.NewBook("1,000 Year Plan", "Isaac Asimov", "1951"))
+	err := br.Insert(models.NewBook(
+		"1,000 Year Plan",
+		"Isaac Asimov",
+		"1951",
+		"fiction",
+		"read",
+	))
 	assert.Nil(t, err)
 
 	t.Cleanup(func() {
@@ -33,16 +39,22 @@ func TestSelectAll(t *testing.T) {
 			"I Robot",
 			"Isaac Asimov",
 			"1963",
+			"fiction",
+			"read",
 		),
 		models.NewBook(
 			"The Collapsing Universe",
 			"Isaac Asimov",
 			"1977",
+			"non-fiction",
+			"read",
 		),
 		models.NewBook(
 			"Artificial Intelligence: A Guide for Thinking Humans",
 			"Melanie Mitchell",
 			"2020",
+			"non-fiction",
+			"read",
 		),
 	}
 

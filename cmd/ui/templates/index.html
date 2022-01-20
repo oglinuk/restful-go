@@ -15,12 +15,16 @@
 						<th>Title</th>
 						<th>Author</th>
 						<th>Published</th>
+						<th>Genre</th>
+						<th>Read Status</th>
 					</tr>
           {{ range .Books}}
 					<tr>
           	<td><a href="/{{.ID}}">{{ .Title}}</a></td>
 						<td>{{ .Author }}</td>
 						<td>{{ .Published }}</td>
+						<td>{{ .Genre }}</td>
+						<td>{{ .ReadStatus }}</td>
 					</tr>
           {{ end }}
         </table>

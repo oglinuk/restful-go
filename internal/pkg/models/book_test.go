@@ -9,11 +9,20 @@ import (
 // TestNewBook tests if the value of NewBook is equal to the expected one
 func TestNewBook(t *testing.T) {
 	expected := &Book{
-		"75f10dcf2b3bb41eff76fa50e664d132",
+		"b25228dc32c91679a885204942bec44f",
 		"foundations fear",
 		"gregory benford",
-		"946684800",
+		"1997",
+		"fiction",
+		"read",
 	}
-	actual := NewBook("foundations fear", "gregory benford", "946684800")
+
+	actual := NewBook(
+		"foundations fear",
+		"gregory benford",
+		"1997",
+		"fiction",
+		"read",
+	)
 	assert.Equal(t, expected, actual)
 }

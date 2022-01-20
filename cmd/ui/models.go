@@ -6,6 +6,8 @@ type BooksResp struct {
 		Title string
 		Author string
 		Published string
+		Genre string
+		ReadStatus string
 	}	`json:"books"`
 }
 

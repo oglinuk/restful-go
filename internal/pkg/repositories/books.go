@@ -16,7 +16,9 @@ var (
 			id TEXT PRIMARY KEY NOT NULL,
 			title TEXT NOT NULL,
 			author TEXT NOT NULL,
-			published TEXT NOT NULL
+			published TEXT NOT NULL,
+			genre TEXT NOT NULL,
+			read_status TEXT NOT NULL
 		);`
 
 	seedFile = "seeds.csv"
@@ -70,10 +72,12 @@ func (br *BooksRepo) seed() {
 
 	// the first row is always assumed to be column headers 
 	for _, r := range records[1:] {
-		b := models.NewBook(r[0], r[1], r[2])
+		b := models.NewBook(r[0], r[1], r[2], r[3], r[4])
 		log.Printf("Inserting %v\n", b)
-		_, _ = br.DB.Exec(`INSERT INTO tblBooks(id, title, author, published)
-			VALUES(?,?,?,?)`, b.ID, b.Title, b.Author, b.Published)
+		_, _ = br.DB.Exec(`INSERT INTO tblBooks(
+			id, title, author, published, genre, read_status)
+			VALUES(?,?,?,?,?,?)`,
+			b.ID, b.Title, b.Author, b.Published, b.Genre, b.ReadStatus)
 	}
 }
 
@@ -83,12 +87,20 @@ func (br *BooksRepo) seed() {
 func (br *BooksRepo) Insert(b *models.Book) error {
 	log.Printf("Inserting %v\n", b)
 	stmt, err := br.DB.Prepare(`INSERT INTO tblBooks(
-		id, title, author, published) VALUES(?, ?, ?, ?)`)
+		id, title, author, published, genre, read_status)
+		VALUES(?,?,?,?,?,?)`)
 	if err != nil {
 		return err
 	}
 
-	 _, err = stmt.Exec(b.ID, b.Title, b.Author, b.Published)
+	 _, err = stmt.Exec(
+		b.ID,
+		b.Title,
+		b.Author,
+		b.Published,
+		b.Genre,
+		b.ReadStatus,
+	)
 	if err != nil {
 		return err
 	}
@@ -110,7 +122,14 @@ func (br *BooksRepo) SelectAll() ([]*models.Book, error) {
 	for rows.Next() {
 		 b := &models.Book{}
 
-		err = rows.Scan(&b.ID, &b.Title, &b.Author, &b.Published)
+		err = rows.Scan(
+			&b.ID,
+			&b.Title,
+			&b.Author,
+			&b.Published,
+			&b.Genre,
+			&b.ReadStatus,
+		)
 		if err != nil {
 			return nil, err
 		}
