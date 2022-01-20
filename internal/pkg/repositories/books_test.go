@@ -19,27 +19,39 @@ func TestInsert(t *testing.T) {
 	br := NewBooksRepo(database.Open(defaultBookSchema))
 	err := br.Insert(models.NewBook("1,000 Year Plan", "Isaac Asimov", "1951"))
 	assert.Nil(t, err)
+
+	t.Cleanup(func() {
+		cfg := config.Get()
+		os.Remove(cfg.Name)
+		os.Remove(cfg.Database.File)
+	})
 }
 
 func TestSelectAll(t *testing.T) {
 	expected := []*models.Book{
 		models.NewBook(
-			"1,000 Year Plan",
-			"Isaac Asimov",
-			"1951",
-		),
-		models.NewBook(
-			"I, Robot",
+			"I Robot",
 			"Isaac Asimov",
 			"1963",
+		),
+		models.NewBook(
+			"The Collapsing Universe",
+			"Isaac Asimov",
+			"1977",
+		),
+		models.NewBook(
+			"Artificial Intelligence: A Guide for Thinking Humans",
+			"Melanie Mitchell",
+			"2020",
 		),
 	}
 
 	br := NewBooksRepo(database.Open(defaultBookSchema))
 
-	for _, b := range expected[1:] {
+	for _, b := range expected {
 		br.Insert(b)
 	}
+
 	actual, err := br.SelectAll()
 	assert.Nil(t, err)
 	assert.NotNil(t, actual)

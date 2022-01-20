@@ -1,11 +1,10 @@
 package repositories
 
 import (
-	"bufio"
+	"encoding/csv"
 	"database/sql"
 	"log"
 	"os"
-	"strings"
 
 	"github.com/oglinuk/restful-go/internal/pkg/database"
 	"github.com/oglinuk/restful-go/internal/pkg/models"
@@ -20,7 +19,7 @@ var (
 			published TEXT NOT NULL
 		);`
 
-	seedFile = "seeds.txt"
+	seedFile = "seeds.csv"
 )
 
 type BooksRepo struct{
@@ -51,8 +50,8 @@ func NewBooksRepo(db *sql.DB) *BooksRepo {
 	return br
 }
 
-// seed opens the seedFile, and for each line of the file, inserts a
-// NewBook into the database. 
+// seed opens the seedFile (if exists), and for each record in the file,
+// inserts a NewBook into the database. 
 func (br *BooksRepo) seed() {
 	log.Println("Seeding database ...")
 
@@ -62,14 +61,16 @@ func (br *BooksRepo) seed() {
 	}
 	defer f.Close()
 
-	bs := bufio.NewScanner(f)
-	for bs.Scan() {
-		parts := strings.Split(bs.Text(), ",")
-		if err != nil {
-			log.Fatalf("seed::time.Parse: %s\n", err.Error())
-		}
+	csvr := csv.NewReader(f)
+	csvr.TrimLeadingSpace = true
+	records, err := csvr.ReadAll()
+	if err != nil {
+		log.Fatalf("seed::csv.ReadAll: %s\n", err.Error())
+	}
 
-		b := models.NewBook(parts[0], parts[1], parts[2])
+	// the first row is always assumed to be column headers 
+	for _, r := range records[1:] {
+		b := models.NewBook(r[0], r[1], r[2])
 		log.Printf("Inserting %v\n", b)
 		_, _ = br.DB.Exec(`INSERT INTO tblBooks(id, title, author, published)
 			VALUES(?,?,?,?)`, b.ID, b.Title, b.Author, b.Published)
