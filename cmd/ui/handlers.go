@@ -24,6 +24,24 @@ func init() {
 	}
 }
 
+func getBookById(id string) (*BookResp, error) {
+	resp, err := http.Get(fmt.Sprintf("%s/books/%s", currentIP, id))
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	br := &BookResp{}
+
+	err = json.NewDecoder(resp.Body).Decode(&br)
+	if err != nil {
+		return nil, err
+	}
+	log.Printf("[BookResp]: %v\n", br)
+
+	return br, nil
+}
+
 func getBooks() (*BooksResp, error) {
 	resp, err := http.Get(fmt.Sprintf("%s/books", currentIP))
 	if err != nil {

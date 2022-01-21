@@ -15,8 +15,8 @@ func TestNewBooksRepo(t *testing.T) {
 	assert.NotNil(t, br)
 }
 
-func TestInsert(t *testing.T) {
-	br := NewBooksRepo(database.Open(defaultBookSchema))
+func TestInsertBook(t *testing.T) {
+	br := NewBooksRepo(database.Open(bookSchema))
 	err := br.Insert(models.NewBook(
 		"1,000 Year Plan",
 		"Isaac Asimov",
@@ -33,7 +33,7 @@ func TestInsert(t *testing.T) {
 	})
 }
 
-func TestSelectAll(t *testing.T) {
+func TestSelectAllBooks(t *testing.T) {
 	expected := []*models.Book{
 		models.NewBook(
 			"I Robot",
@@ -58,7 +58,7 @@ func TestSelectAll(t *testing.T) {
 		),
 	}
 
-	br := NewBooksRepo(database.Open(defaultBookSchema))
+	br := NewBooksRepo(database.Open(bookSchema))
 
 	for _, b := range expected {
 		br.Insert(b)
@@ -68,6 +68,30 @@ func TestSelectAll(t *testing.T) {
 	assert.Nil(t, err)
 	assert.NotNil(t, actual)
 	assert.Equal(t, expected, actual)
+
+	t.Cleanup(func() {
+		cfg := config.Get()
+		os.Remove(cfg.Name)
+		os.Remove(cfg.Database.File)
+	})
+}
+
+func TestRetrieveBook(t *testing.T) {
+	br := NewBooksRepo(database.Open(bookSchema))
+	expected := models.NewBook(
+		"1,000 Year Plan",
+		"Isaac Asimov",
+		"1951",
+		"fiction",
+		"read",
+	)
+
+	err := br.Insert(expected)
+	assert.Nil(t, err)
+
+	actual, err := br.Select(expected.ID)
+	assert.Nil(t, err)
+	assert.Equal(t, expected.ID, actual.ID)
 
 	t.Cleanup(func() {
 		cfg := config.Get()

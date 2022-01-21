@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"net/http"
 	"text/template"
@@ -27,7 +26,15 @@ func main() {
 	})
 
 	router.HandleFunc("/{id}", func(w http.ResponseWriter, r *http.Request) {
-		fmt.Fprintf(w, "TODO! But hello to %s", mux.Vars(r)["id"])
+		br, err := getBookById(mux.Vars(r)["id"])
+		if err != nil {
+			http.Error(w, err.Error(), 500)
+		} else {
+			err = tpl.ExecuteTemplate(w, "book.html", br)
+			if err != nil {
+				http.Error(w, err.Error(), 500)
+			}
+		}
 	})
 
 	addr := "0.0.0.0:9042"

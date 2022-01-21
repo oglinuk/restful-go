@@ -1,14 +1,16 @@
 package main
 
+type BookResp struct {
+	ID string `json:"id"`
+	Title string `json:"title"`
+	Author string `json:"author"`
+	Published string `json:"published"`
+	Genre string `json:"genre"`
+	ReadStatus string `json:"readstatus"`
+}
+
 type BooksResp struct {
-	Books []struct {
-		ID string
-		Title string
-		Author string
-		Published string
-		Genre string
-		ReadStatus string
-	}	`json:"books"`
+	Books []BookResp `json:"books"`
 }
 
 type HeartbeatResp struct {

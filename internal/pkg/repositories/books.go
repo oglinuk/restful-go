@@ -11,7 +11,7 @@ import (
 )
 
 var (
-	defaultBookSchema = `
+	bookSchema = `
 		CREATE TABLE IF NOT EXISTS tblBooks(
 			id TEXT PRIMARY KEY NOT NULL,
 			title TEXT NOT NULL,
@@ -29,7 +29,7 @@ type BooksRepo struct{
 }
 
 // NewBooksRepo creates a new BooksRepo object using the given db. If the
-// db is nil, create a new one with the defaultBookSchema. If there is a
+// db is nil, create a new one with the bookSchema. If there is a
 // seedFile present, call br.Seed. Finally return the BooksRepo object.
 func NewBooksRepo(db *sql.DB) *BooksRepo {
 	var err error
@@ -39,7 +39,7 @@ func NewBooksRepo(db *sql.DB) *BooksRepo {
 	}
 
 	if br.DB == nil {
-		br.DB = database.Open(defaultBookSchema)
+		br.DB = database.Open(bookSchema)
 	}
 
 	if _, err = os.Stat(seedFile); err == nil {
@@ -138,4 +138,24 @@ func (br *BooksRepo) SelectAll() ([]*models.Book, error) {
 	}
 
 	return books, nil
+}
+
+func (br *BooksRepo) Select(id string) (*models.Book, error) {
+	book := &models.Book{}
+
+	row := br.DB.QueryRow(`SELECT * FROM tblBooks WHERE ID=?`, id)
+
+	err := row.Scan(
+		&book.ID,
+		&book.Title,
+		&book.Author,
+		&book.Published,
+		&book.Genre,
+		&book.ReadStatus,
+	)
+	if err != nil {
+		return nil, err
+	}
+
+	return book, nil
 }

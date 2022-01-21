@@ -13,6 +13,7 @@ func New(db *sql.DB) *mux.Router {
 
 	router.HandleFunc("/", env.Heartbeat)
 	router.HandleFunc("/books", env.BookList)
+	router.HandleFunc("/books/{id}", env.BookById)
 
 	return router
 }
