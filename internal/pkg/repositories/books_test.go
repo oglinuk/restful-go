@@ -99,3 +99,27 @@ func TestRetrieveBook(t *testing.T) {
 		os.Remove(cfg.Database.File)
 	})
 }
+
+func TestDeleteBook(t *testing.T) {
+	br := NewBooksRepo(database.Open(bookSchema))
+
+	book := models.NewBook(
+		"1,000 Year Plan",
+		"Isaac Asimov",
+		"1951",
+		"fiction",
+		"read",
+	)
+
+	err := br.Insert(book)
+	assert.Nil(t, err)
+
+	err = br.Delete(book.ID)
+	assert.Nil(t, err)
+
+	t.Cleanup(func() {
+		cfg := config.Get()
+		os.Remove(cfg.Name)
+		os.Remove(cfg.Database.File)
+	})
+}

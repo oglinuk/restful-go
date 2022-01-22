@@ -141,6 +141,8 @@ func (br *BooksRepo) SelectAll() ([]*models.Book, error) {
 }
 
 func (br *BooksRepo) Select(id string) (*models.Book, error) {
+	log.Printf("Selecting %s\n", id)
+
 	book := &models.Book{}
 
 	row := br.DB.QueryRow(`SELECT * FROM tblBooks WHERE ID=?`, id)
@@ -158,4 +160,22 @@ func (br *BooksRepo) Select(id string) (*models.Book, error) {
 	}
 
 	return book, nil
+}
+
+// ===== DELETE ===== //
+
+func (br *BooksRepo) Delete(id string) error {
+	log.Printf("Deleting %s\n", id)
+
+	stmt, err := br.DB.Prepare(`DELETE FROM tblBooks WHERE ID=?`)
+	if err != nil {
+		return err
+	}
+	defer stmt.Close()
+
+	if _, err = stmt.Exec(id); err != nil {
+		return err
+	}
+
+	return nil
 }

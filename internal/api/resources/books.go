@@ -16,7 +16,8 @@ func (env *Env) BookList(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-// BookById gets and returns the book with the given {id}
+// BookById gets and returns the book with the given {id} (if a GET) or
+// deletes the book (if a DELETE)
 func (env *Env) BookById(w http.ResponseWriter, r *http.Request) {
 	id := chi.URLParam(r, "id")
 	if id == "" {
@@ -28,10 +29,17 @@ func (env *Env) BookById(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	book, err := env.Books.Select(id)
-	if err != nil {
-		JSONIFY(w, http.StatusInternalServerError, JSON{"error": err.Error()})
-	} else {
+	if r.Method == "GET" {
+		book, err := env.Books.Select(id)
+		if err != nil {
+			JSONIFY(
+				w,
+				http.StatusInternalServerError,
+				JSON{"error": err.Error()},
+			)
+			return
+		}
+
 		JSONIFY(w, http.StatusOK, JSON{
 			"id": book.ID,
 			"title": book.Title,
@@ -40,5 +48,20 @@ func (env *Env) BookById(w http.ResponseWriter, r *http.Request) {
 			"genre": book.Genre,
 			"readstatus": book.ReadStatus,
 		})
+		return
+	}
+
+	if r.Method == "DELETE" {
+		err := env.Books.Delete(id)
+		if err != nil {
+			JSONIFY(
+				w,
+				http.StatusInternalServerError,
+				JSON{"error": err.Error()},
+			)
+			return
+		}
+
+		JSONIFY(w, http.StatusOK, JSON{"status": "success"})
 	}
 }

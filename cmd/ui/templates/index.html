@@ -22,10 +22,14 @@
 				<td>{{ .Published }}</td>
 				<td>{{ .Genre }}</td>
 				<td>{{ .ReadStatus }}</td>
+				<td>
+					<input type="button" value="delete" onclick="deleteReq('{{.ID}}')" />
+				</td>
 			</tr>
 			{{ end }}
 		</table>
 	</main>
+	<script type="text/javascript" src="/static/js/index.js"></script>
 </body>
 
 </html>

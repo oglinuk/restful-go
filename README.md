@@ -30,3 +30,14 @@ Once both are running go to [`localhost:9042`](http://localhost:9042). If
 you want to access the page from other devices on the network, goto
 [`localhost:9001`](http://localhost:9001) and replace `localhost` with
 the `ip` given as the response.
+
+## TODO
+
+* [ ] Implement simple CRUD operations
+	* [X] Insert
+	* [X] SelectAll
+	* [X] Select
+	* [ ] Update
+	* [X] Delete
+* [ ] Add CI/CD pipeline
+* [ ] Add `ARCHITECTURE.md`

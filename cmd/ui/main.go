@@ -37,6 +37,12 @@ func main() {
 		}
 	})
 
+	r.Get("/static/*", func(w http.ResponseWriter, r *http.Request) {
+		root := http.Dir("static")
+		fsrvr := http.StripPrefix("/static/", http.FileServer(root))
+		fsrvr.ServeHTTP(w, r)
+	})
+
 	addr := "0.0.0.0:9042"
 	log.Printf("Serving at %s ...\n", addr)
 	log.Fatal(http.ListenAndServe(addr, r))
