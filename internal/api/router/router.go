@@ -2,18 +2,30 @@ package router
 
 import (
 	"database/sql"
+	"time"
 
-	"github.com/gorilla/mux"
+	"github.com/go-chi/chi/v5"
+	"github.com/go-chi/chi/v5/middleware"
 	"github.com/oglinuk/restful-go/internal/api/resources"
 )
 
-func New(db *sql.DB) *mux.Router {
+func NewRouter(db *sql.DB) *chi.Mux {
 	env := resources.NewEnv(db)
-	router := mux.NewRouter()
+	r := chi.NewRouter()
 
-	router.HandleFunc("/", env.Heartbeat)
-	router.HandleFunc("/books", env.BookList)
-	router.HandleFunc("/books/{id}", env.BookById)
+	// middlewares
+	r.Use(middleware.RequestID)
+	r.Use(middleware.RealIP)
+	r.Use(middleware.Logger)
+	r.Use(middleware.Recoverer)
+	r.Use(middleware.Timeout(60*time.Second))
 
-	return router
+	r.Get("/", env.Heartbeat)
+
+	r.Route("/books", func(r chi.Router) {
+		r.Get("/", env.BookList)
+		r.Get("/{id}", env.BookById)
+	})
+
+	return r
 }

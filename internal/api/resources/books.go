@@ -3,7 +3,7 @@ package resources
 import (
 	"net/http"
 
-	"github.com/gorilla/mux"
+	"github.com/go-chi/chi/v5"
 )
 
 // BookList gets and returns all available books in the database
@@ -18,7 +18,7 @@ func (env *Env) BookList(w http.ResponseWriter, r *http.Request) {
 
 // BookById gets and returns the book with the given {id}
 func (env *Env) BookById(w http.ResponseWriter, r *http.Request) {
-	id := mux.Vars(r)["id"]
+	id := chi.URLParam(r, "id")
 	if id == "" {
 		JSONIFY(
 			w,

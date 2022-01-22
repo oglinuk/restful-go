@@ -13,7 +13,7 @@ import (
 func Run() {
 	cfg := config.Get()
 
-	r := router.New(nil)
+	r := router.NewRouter(nil)
 
 	addr := fmt.Sprintf("%s:%d", cfg.Server.Host, cfg.Server.Port)
 	log.Printf("Serving at %s ...\n", addr)

@@ -4,7 +4,7 @@ This is an example REST API implementation using primarily the standard
 library. The exceptions are as follows.
 
 ```
-github.com/gorilla/mux v1.8.0 (for the router)
+github.com/go-chi/chi/v5 v5.0.7 (for the router)
 github.com/mattn/go-sqlite3 v1.14.8 (for the database)
 github.com/stretchr/testify v1.7.0 (for testing)
 gopkg.in/yaml.v3 v3.0.0-20210107192922-496545a6307b (for configuration)
@@ -24,8 +24,7 @@ gopkg.in/yaml.v3 v3.0.0-20210107192922-496545a6307b (for configuration)
 
 ### With `docker-compose`
 
-`./init dcompose`
-
+`docker-compose up --build` || `./init dcompose`
 
 Once both are running go to [`localhost:9042`](http://localhost:9042). If
 you want to access the page from other devices on the network, goto

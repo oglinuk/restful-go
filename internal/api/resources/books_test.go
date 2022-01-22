@@ -1,13 +1,17 @@
 package resources
 
 import (
+	"context"
+	"fmt"
 	"net/http"
 	"net/http/httptest"
 	"os"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
+	"github.com/go-chi/chi/v5"
 	"github.com/oglinuk/restful-go/internal/pkg/config"
+	"github.com/oglinuk/restful-go/internal/pkg/models"
 )
 
 func TestBookList(t *testing.T) {
@@ -38,11 +42,6 @@ func TestNoIdBookById(t *testing.T) {
 	})
 }
 
-/*
-
-// The below test should work, but have not figured out why the book ID
-// is not being captured by mux.Vars. TODO.
-
 func TestBookById(t *testing.T) {
 	env := NewEnv(nil)
 
@@ -62,7 +61,14 @@ func TestBookById(t *testing.T) {
 		fmt.Sprintf("/books/%s", expected.ID),
 		nil,
 	)
-	assert.Nil(t, err)
+
+	rctx := chi.NewRouteContext()
+	rctx.URLParams.Add("id", expected.ID)
+	req = req.WithContext(context.WithValue(
+			req.Context(),
+			chi.RouteCtxKey,
+			rctx,
+	))
 
 	resp := Record(req, env.BookById)
 	assert.NotNil(t, resp)
@@ -74,4 +80,3 @@ func TestBookById(t *testing.T) {
 		os.Remove(cfg.Database.File)
 	})
 }
-*/
