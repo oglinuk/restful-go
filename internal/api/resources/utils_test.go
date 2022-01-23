@@ -30,3 +30,12 @@ func TestRecord(t *testing.T) {
 		os.Remove(cfg.Database.File)
 	})
 }
+
+func TestChiURLParam(t *testing.T) {
+	m := map[string]string{
+		"id": "test",
+	}
+
+	r := ChiURLParams(m, &http.Request{})
+	assert.NotNil(t, r)
+}

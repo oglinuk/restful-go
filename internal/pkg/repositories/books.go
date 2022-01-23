@@ -43,10 +43,7 @@ func NewBooksRepo(db *sql.DB) *BooksRepo {
 	}
 
 	if _, err = os.Stat(seedFile); err == nil {
-		log.Println("Found a seed file.")
 		br.seed()
-	} else {
-		log.Println("No seed file found ...")
 	}
 
 	return br
@@ -73,7 +70,7 @@ func (br *BooksRepo) seed() {
 	// the first row is always assumed to be column headers 
 	for _, r := range records[1:] {
 		b := models.NewBook(r[0], r[1], r[2], r[3], r[4])
-		log.Printf("Inserting %v\n", b)
+		log.Printf("[BooksRepo] Inserting %v\n", b)
 		_, _ = br.DB.Exec(`INSERT INTO tblBooks(
 			id, title, author, published, genre, read_status)
 			VALUES(?,?,?,?,?,?)`,
@@ -85,7 +82,7 @@ func (br *BooksRepo) seed() {
 
 // Insert (b)ook into the database
 func (br *BooksRepo) Insert(b *models.Book) error {
-	log.Printf("Inserting %v\n", b)
+	log.Printf("[BooksRepo] Inserting %v\n", b)
 	stmt, err := br.DB.Prepare(`INSERT INTO tblBooks(
 		id, title, author, published, genre, read_status)
 		VALUES(?,?,?,?,?,?)`)
@@ -140,8 +137,9 @@ func (br *BooksRepo) SelectAll() ([]*models.Book, error) {
 	return books, nil
 }
 
+// Select book by id
 func (br *BooksRepo) Select(id string) (*models.Book, error) {
-	log.Printf("Selecting %s\n", id)
+	log.Printf("[BooksRepo] Selecting %s\n", id)
 
 	book := &models.Book{}
 
@@ -162,10 +160,30 @@ func (br *BooksRepo) Select(id string) (*models.Book, error) {
 	return book, nil
 }
 
+// ===== UPDATE ===== //
+
+// Update deletes the old book by id and inserts the new given book
+func (br *BooksRepo) Update(id string, book *models.Book) (string, error) {
+	log.Printf("[BooksRepo] Updating [%s]: %v\n", id, book)
+
+	err := br.Delete(id)
+	if err != nil {
+		return "", err
+	}
+
+	err = br.Insert(book)
+	if err != nil {
+		return "", err
+	}
+
+	return book.ID, nil
+}
+
 // ===== DELETE ===== //
 
+// Delete book by id
 func (br *BooksRepo) Delete(id string) error {
-	log.Printf("Deleting %s\n", id)
+	log.Printf("[BooksRepo] Deleting %s\n", id)
 
 	stmt, err := br.DB.Prepare(`DELETE FROM tblBooks WHERE ID=?`)
 	if err != nil {

@@ -17,6 +17,7 @@ func TestNewBooksRepo(t *testing.T) {
 
 func TestInsertBook(t *testing.T) {
 	br := NewBooksRepo(database.Open(bookSchema))
+
 	err := br.Insert(models.NewBook(
 		"1,000 Year Plan",
 		"Isaac Asimov",
@@ -25,16 +26,17 @@ func TestInsertBook(t *testing.T) {
 		"read",
 	))
 	assert.Nil(t, err)
-
-	t.Cleanup(func() {
-		cfg := config.Get()
-		os.Remove(cfg.Name)
-		os.Remove(cfg.Database.File)
-	})
 }
 
 func TestSelectAllBooks(t *testing.T) {
 	expected := []*models.Book{
+		models.NewBook(
+			"1,000 Year Plan",
+			"Isaac Asimov",
+			"1951",
+			"fiction",
+			"read",
+		),
 		models.NewBook(
 			"I Robot",
 			"Isaac Asimov",
@@ -60,28 +62,24 @@ func TestSelectAllBooks(t *testing.T) {
 
 	br := NewBooksRepo(database.Open(bookSchema))
 
-	for _, b := range expected {
-		br.Insert(b)
+	for _, b := range expected[1:] {
+		err := br.Insert(b)
+		assert.Nil(t, err)
 	}
 
 	actual, err := br.SelectAll()
 	assert.Nil(t, err)
 	assert.NotNil(t, actual)
 	assert.Equal(t, expected, actual)
-
-	t.Cleanup(func() {
-		cfg := config.Get()
-		os.Remove(cfg.Name)
-		os.Remove(cfg.Database.File)
-	})
 }
 
 func TestRetrieveBook(t *testing.T) {
 	br := NewBooksRepo(database.Open(bookSchema))
+
 	expected := models.NewBook(
-		"1,000 Year Plan",
+		"The End of Eternity",
 		"Isaac Asimov",
-		"1951",
+		"1955",
 		"fiction",
 		"read",
 	)
@@ -92,23 +90,44 @@ func TestRetrieveBook(t *testing.T) {
 	actual, err := br.Select(expected.ID)
 	assert.Nil(t, err)
 	assert.Equal(t, expected.ID, actual.ID)
+}
 
-	t.Cleanup(func() {
-		cfg := config.Get()
-		os.Remove(cfg.Name)
-		os.Remove(cfg.Database.File)
-	})
+func TestUpdateBook(t *testing.T) {
+	br := NewBooksRepo(database.Open(bookSchema))
+
+	book := models.NewBook(
+		"The Time Machine",
+		"H. G. Wells",
+		"1979",
+		"fiction",
+		"reading",
+	)
+
+	err := br.Insert(book)
+	assert.Nil(t, err)
+
+	updated := models.NewBook(
+		"The Time Machine",
+		"H. G. Wells",
+		"1979",
+		"fiction",
+		"read",
+	)
+
+	id, err := br.Update(book.ID, updated)
+	assert.Nil(t, err)
+	assert.Equal(t, updated.ID, id)
 }
 
 func TestDeleteBook(t *testing.T) {
 	br := NewBooksRepo(database.Open(bookSchema))
 
 	book := models.NewBook(
-		"1,000 Year Plan",
-		"Isaac Asimov",
-		"1951",
-		"fiction",
-		"read",
+		"Chaos: Making a New Science",
+		"James Gleick",
+		"1988",
+		"non-fiction",
+		"reading",
 	)
 
 	err := br.Insert(book)

@@ -33,11 +33,14 @@ the `ip` given as the response.
 
 ## TODO
 
-* [ ] Implement simple CRUD operations
+* [X] Implement simple CRUD operations
 	* [X] Insert
 	* [X] SelectAll
 	* [X] Select
-	* [ ] Update
+	* [X] Update
 	* [X] Delete
+* [ ] Review
+* [ ] Implement API tokens using JWT
+* [ ] Implement a database abstraction layer
 * [ ] Add CI/CD pipeline
 * [ ] Add `ARCHITECTURE.md`

@@ -1,0 +1,32 @@
+<!DOCTYPE HTML>
+<html lang="en">
+
+{{ template "header" }}
+
+<body class="body">
+	<main>
+		<div class="column">
+			<form method="POST" action="/">
+				<input type="hidden" name="id" value="" required />
+				<b>Title:</b>
+				<input type="text" name="title" required />
+				<br><br>
+				<b>Author:</b>
+				<input type="text" name="author" required />
+				<br><br>
+				<b>Published:</b>
+				<input type="text" name="published" required />
+				<br><br>
+				<b>Genre:</b>
+				<input type="text" name="genre" required />
+				<br><br>
+				<b>Read Status:</b>
+				<input type="text" name="readstatus" required />
+				<br><br>
+				<button class="btn-secondary" type="submit">Create</button>
+			</form>
+		</div>
+	</main>
+</body>
+
+</html>

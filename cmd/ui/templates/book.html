@@ -6,11 +6,26 @@
 <body class="body">
 	<main>
 		<div class="column">
-			<h1>{{ .Title }}</h1>
-			<b>Author:</b> {{ .Author }}<br><br>
-			<b>Published:</b> {{ .Published }}<br><br>
-			<b>Genre:</b> {{ .Genre }}<br><br>
-			<b>Read Status:</b> {{ .ReadStatus }}
+			<form method="POST" action="/">
+				<input type="hidden" name="_method" value="PUT" required />
+				<input type="hidden" name="id" value="{{.ID}}" required />
+				<b>Title:</b>
+				<input type="text" name="title" value="{{.Title}}" required />
+				<br><br>
+				<b>Author:</b>
+				<input type="text" name="author" value="{{.Author}}" required />
+				<br><br>
+				<b>Published:</b>
+				<input type="text" name="published" value="{{.Published}}" required />
+				<br><br>
+				<b>Genre:</b>
+				<input type="text" name="genre" value="{{.Genre}}" required />
+				<br><br>
+				<b>Read Status:</b>
+				<input type="text" name="readstatus" value="{{.ReadStatus}}" required />
+				<br><br>
+				<button class="btn-secondary" type="submit">Update</button>
+			</form>
 		</div>
 	</main>
 </body>

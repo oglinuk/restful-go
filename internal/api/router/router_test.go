@@ -10,22 +10,16 @@ import (
 
 func TestNewRouter(t *testing.T) {
 	assert.NotNil(t, NewRouter(nil))
-
-	t.Cleanup(func() {
-		cfg := config.Get()
-		os.Remove(cfg.Name)
-		os.Remove(cfg.Database.File)
-	})
 }
 
 func TestRouterRoutes(t *testing.T) {
 	r := NewRouter(nil)
 	assert.NotNil(t, r)
 
-	expected := []string{"/", "/books/*"}
+	expectedPatterns := []string{"/", "/books/*"}
 
 	for i, route := range r.Routes() {
-		assert.Equal(t, expected[i], route.Pattern)
+		assert.Equal(t, expectedPatterns[i], route.Pattern)
 	}
 
 	t.Cleanup(func() {

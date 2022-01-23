@@ -25,6 +25,28 @@ func main() {
 		}
 	})
 
+	r.Post("/", func(w http.ResponseWriter, r *http.Request) {
+		// This is dumb, but required since PUT is not allowed in HTML forms
+		isUpdate := r.PostFormValue("_method")
+
+		if isUpdate != "" {
+			b, err := updateBookById(r)
+			if err != nil {
+				http.Error(w, err.Error(), 500)
+			} else {
+				http.Redirect(w, r, "/"+b.ID, http.StatusMovedPermanently)
+			}
+			return
+		}
+
+		id, err := createBook(r)
+		if err != nil {
+			http.Error(w, err.Error(), 500)
+		} else {
+			http.Redirect(w, r, "/"+id, http.StatusMovedPermanently)
+		}
+	})
+
 	r.Get("/{id}", func(w http.ResponseWriter, r *http.Request) {
 		br, err := getBookById(chi.URLParam(r, "id"))
 		if err != nil {
@@ -34,6 +56,13 @@ func main() {
 			if err != nil {
 				http.Error(w, err.Error(), 500)
 			}
+		}
+	})
+
+	r.Get("/create", func(w http.ResponseWriter, r *http.Request) {
+		err := tpl.ExecuteTemplate(w, "create.html", nil)
+		if err != nil {
+			http.Error(w, err.Error(), 500)
 		}
 	})
 

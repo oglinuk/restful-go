@@ -1,9 +1,12 @@
 package resources
 
 import (
+	"context"
 	"encoding/json"
 	"net/http"
 	"net/http/httptest"
+
+	"github.com/go-chi/chi/v5"
 )
 
 type JSON map[string]interface{}
@@ -24,4 +27,20 @@ func Record(r *http.Request, handler http.HandlerFunc) *http.Response {
 	rr := httptest.NewRecorder()
 	handler(rr, r)
 	return rr.Result()
+}
+
+func ChiURLParams(kvs map[string]string, r *http.Request) *http.Request {
+	rctx := chi.NewRouteContext()
+
+	for k := range kvs {
+		rctx.URLParams.Add(k, kvs[k])
+	}
+
+	r = r.WithContext(context.WithValue(
+			r.Context(),
+			chi.RouteCtxKey,
+			rctx,
+	))
+
+	return r
 }

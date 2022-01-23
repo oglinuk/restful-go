@@ -31,8 +31,10 @@ func NewRouter(db *sql.DB) *chi.Mux {
 	r.Get("/", env.Heartbeat)
 
 	r.Route("/books", func(r chi.Router) {
+		r.Post("/", env.CreateBook)
 		r.Get("/", env.BookList)
 		r.Get("/{id}", env.BookById)
+		r.Put("/{id}", env.BookById)
 		r.Delete("/{id}", env.BookById)
 	})
 
