@@ -1,10 +1,11 @@
 # REST API in Golang
 
 This is an example REST API implementation using primarily the standard
-library. The exceptions are as follows.
+library, Docker, and Docker Compose. The exceptions are as follows.
 
 ```
 github.com/go-chi/chi/v5 v5.0.7 (for the router)
+github.com/go-chi/cors v1.2.0 (for CORS)
 github.com/mattn/go-sqlite3 v1.14.8 (for the database)
 github.com/stretchr/testify v1.7.0 (for testing)
 gopkg.in/yaml.v3 v3.0.0-20210107192922-496545a6307b (for configuration)
@@ -39,7 +40,7 @@ the `ip` given as the response.
 	* [X] Select
 	* [X] Update
 	* [X] Delete
-* [ ] Review
+* [X] [Code Review](docs/code-reviews/1642914462)
 * [ ] Implement API tokens using JWT
 * [ ] Implement a database abstraction layer
 * [ ] Add CI/CD pipeline
