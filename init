@@ -1,7 +1,7 @@
-#!/bin/sh
+#!/bin/bash
 
 api() {
-	cd ./cmd/api
+	cd "$PWD/cmd/api" || exit
 	go build && ./api
 }
 
@@ -12,7 +12,7 @@ dapi() {
 }
 
 ui() {
-	cd ./cmd/ui
+	cd "$PWD/cmd/ui" || exit
 	go build && ./ui
 }
 
@@ -22,11 +22,11 @@ app() {
 }
 
 clean() {
-	killall api ui
-	rm ./cmd/api/api ./cmd/api/cfg.yaml ./cmd/api/library.db
-	rm ./cmd/ui/ui
+	rm -i "$PWD/cmd/api/api" \
+		"$PWD/cmd/api/cfg.yaml" \
+		"$PWD/cmd/api/library.db" \
+		"$PWD/cmd/ui/ui"
 }
-
 
 dcompose() {
 	docker-compose up --build
@@ -36,4 +36,13 @@ dclean() {
 	docker stop restful-api && docker rm restful-api
 }
 
-$*
+cmds="api app clean dapi dclean dcompose ui"
+if [[ -n "$COMP_LINE" ]]; then
+	cl="${COMP_LINE##* }"
+	for c in ${cmds}; do
+		test -z "${cl}" -o "${c}" != "${c#${cl}}" && echo "$c"
+	done
+	exit
+fi
+
+"$@"
