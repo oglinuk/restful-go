@@ -52,10 +52,10 @@ For more information:
 
 **TODO**
 
-* [ ] Implement tab-completion
-* [ ] Refactor all relative paths be absolute paths
-* [ ] Refactor `$*` to `"$@"`
-* [ ] Refactor `cd` to `cd || exit`
+* [X] Implement tab-completion
+* [X] Refactor all relative paths be absolute paths
+* [X] Refactor `$*` to `"$@"`
+* [X] Refactor `cd` to `cd || exit`
 
 ## cmd/api/main.go
 
@@ -63,7 +63,7 @@ Since there is only one import, change from using `()` to a single line.
 
 **TODO**
 
-* [ ] Refactor `import` to one line
+* [X] Refactor `import` to one line
 
 ## cmd/ui/Dockerfile
 
@@ -73,17 +73,20 @@ multi-stage build and using a `scratch` image. The current image size is
 
 **TODO**
 
-* [ ] Refactor to using multi-stage build with `scratch` image
+* [X] Refactor to using multi-stage build with `scratch` image
 
 ## cmd/ui/main.go
 
 The `addr` variable is hardcoded. The implementation of route handlers is
-split between `main.go` and `handlers.go`.
+split between `main.go` and `handlers.go`. No check to ensure `tpl`
+variable is not `nil`. Missing route for `getHeartbeat` handler.
 
 **TODO**
 
-* [ ] Refactor `addr` to get `HOST` and `PORT` env variables
-* [ ] Refactor route handler logic entirely to `handlers.go`
+* [X] Add check to see if `tpl` is `nil`
+* [X] Refactor `addr` to get `HOST` and `PORT` env variables
+* [X] Refactor route handler logic entirely to `handlers.go`
+* [X] Add `getHeartbeat` to the router
 
 ## cmd/ui/models.go
 
