@@ -90,16 +90,16 @@ variable is not `nil`. Missing route for `getHeartbeat` handler.
 
 ## cmd/ui/models.go
 
-`cmd/ui` is a minimal web UI to showcase a frontend for the REST
-interface, so nothing should be public.
+Missing test file. `cmd/ui` is a minimal web UI to showcase a frontend
+for the REST interface, so nothing should be public.
 
 **TODO**
 
-* [ ] Create `models_test.go`
-* [ ] Refactor all structs to be private
-	* [ ] `BookResp`
-	* [ ] `BooksResp`
-	* [ ] `HeartbeatResp`
+* [X] Create `models_test.go`
+* [X] Refactor all structs to be private
+	* [X] `BookResp`
+	* [X] `BooksResp`
+	* [X] `HeartbeatResp`
 
 ## cmd/ui/handlers.go
 
@@ -126,8 +126,8 @@ ensure they are not `nil` in `decodeJSON`.
 
 **TODO**
 
-* [ ] Create `utils_test.go`
-* [ ] Add check of `v` and `body` if `nil` in `decodeJSON`
+* [X] Create `utils_test.go`
+* [X] Add check of `v` and `body` if `nil` in `decodeJSON`
 
 ## cmd/ui/static/js/index.js
 
