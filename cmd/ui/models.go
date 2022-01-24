@@ -1,6 +1,6 @@
 package main
 
-type BookResp struct {
+type bookResp struct {
 	ID string `json:"id"`
 	Title string `json:"title"`
 	Author string `json:"author"`
@@ -9,10 +9,10 @@ type BookResp struct {
 	ReadStatus string `json:"readstatus"`
 }
 
-type BooksResp struct {
-	Books []BookResp `json:"books"`
+type booksResp struct {
+	Books []bookResp `json:"books"`
 }
 
-type HeartbeatResp struct {
+type heartbeatResp struct {
 	IP string `json:"ip"`
 }

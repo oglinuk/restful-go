@@ -87,13 +87,13 @@ func createBook(w http.ResponseWriter, r *http.Request) {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 		}
 
-		br := &BookResp{}
+		br := &bookResp{}
 
 		err = decodeJSON(br, resp.Body)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 		}
-		log.Printf("[BookResp]: %v\n", br)
+		log.Printf("[bookResp]: %v\n", br)
 
 		http.Redirect(w, r, "/"+br.ID, http.StatusMovedPermanently)
 		return
@@ -135,13 +135,13 @@ func updateBookById(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 	}
 
-	br := &BookResp{}
+	br := &bookResp{}
 
 	err = decodeJSON(br, resp.Body)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
-	log.Printf("[BookResp]: %v\n", br)
+	log.Printf("[bookResp]: %v\n", br)
 
 	http.Redirect(w, r, "/"+br.ID, http.StatusMovedPermanently)
 }
@@ -153,13 +153,13 @@ func getBookById(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 	}
 
-	br := &BookResp{}
+	br := &bookResp{}
 
 	err = decodeJSON(br, resp.Body)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
-	log.Printf("[BookResp]: %v\n", br)
+	log.Printf("[bookResp]: %v\n", br)
 
 	err = tpl.ExecuteTemplate(w, "book.html", br)
 	if err != nil {
@@ -173,13 +173,13 @@ func getBooks(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
 
-	br := &BooksResp{}
+	br := &booksResp{}
 
 	err = decodeJSON(br, resp.Body)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 	}
-	log.Printf("[BooksResp]: %v\n", br)
+	log.Printf("[booksResp]: %v\n", br)
 
 	err = tpl.ExecuteTemplate(w, "index.html", br)
 	if err != nil {
@@ -188,7 +188,7 @@ func getBooks(w http.ResponseWriter, r *http.Request) {
 }
 
 func getHeartbeat(w http.ResponseWriter, r *http.Request) {
-	hb := &HeartbeatResp{}
+	hb := &heartbeatResp{}
 
 	resp, err := http.Get(currentIP)
 	if err != nil {
