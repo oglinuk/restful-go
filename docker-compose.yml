@@ -6,11 +6,11 @@ services:
     ports:
       - 9042:9042
     depends_on:
-      - api
+      - rest-api
     networks:
       - tiered
-  api:
-    container_name: api
+  rest-api:
+    container_name: rest-api
     build: .
     ports:
       - 9001:9001

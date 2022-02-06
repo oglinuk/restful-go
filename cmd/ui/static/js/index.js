@@ -6,6 +6,8 @@ function deleteReq(id) {
 	}).then(() => {
 		window.location.reload()
 	}).catch((e) => {
-		console.log(`Error: ${e}`)
+		let msg = `Delete request failed ...`
+		alert(msg)
+		console.log(msg)
 	})
 }

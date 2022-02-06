@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"os"
 	"text/template"
+	"time"
 
 	"github.com/go-chi/chi/v5"
 )
@@ -13,25 +14,63 @@ import (
 var (
 	tplDir = "templates/*"
 	tpl *template.Template
+
+	localIP = ""
+	dockerIP = ""
+	currentIP = ""
+
+	client *http.Client
 )
 
-func main() {
+func init() {
 	tpl = template.Must(template.ParseGlob(tplDir))
 	if tpl == nil {
 		log.Fatalf("template.Must(template.ParseGlob(\"%s\")", tplDir)
 	}
 
-	HOST := os.Getenv("HOST")
-	if HOST == "" {
-		HOST = "0.0.0.0"
+	client = &http.Client{
+		Timeout: time.Second * 15,
 	}
 
-	PORT := os.Getenv("PORT")
-	if PORT == "" {
-		PORT = "9042"
+	dockerPORT := os.Getenv("dockerPORT")
+	if dockerPORT == "" {
+		dockerPORT = "9001"
 	}
 
-	addr := fmt.Sprintf("%s:%s", HOST, PORT)
+	dockerHOST := os.Getenv("dockerHOST")
+	if dockerHOST == "" {
+		dockerHOST = "rest-api"
+	}
+
+	dockerIP = fmt.Sprintf("http://%s:%s", dockerHOST, dockerPORT)
+
+	_, err := http.Get(dockerIP)
+	if err != nil {
+		log.Printf("http.Get(dockerIP): %s\n", err.Error())
+		localHOST := os.Getenv("localHOST")
+		if localHOST == "" {
+			localHOST = "0.0.0.0"
+		}
+
+		currentIP = fmt.Sprintf("http://%s:%s", localHOST, dockerPORT)
+	} else {
+		currentIP = dockerIP
+	}
+	log.Printf("Backend is running at %s ...\n", currentIP)
+}
+
+func main() {
+	uiHOST := os.Getenv("uiHOST")
+	if uiHOST == "" {
+		uiHOST = "0.0.0.0"
+	}
+
+	uiPORT := os.Getenv("uiPORT")
+	if uiPORT == "" {
+		uiPORT = "9042"
+	}
+
+	addr := fmt.Sprintf("%s:%s", uiHOST, uiPORT)
 
 	r := chi.NewRouter()
 
