@@ -10,25 +10,40 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-// TestNilInputsDecodeJSON ensures that decodeJSON handles nil inputs
+// TestNilInputsDecodeJSON ensures that nil inputs are handled
 func TestNilInputsDecodeJSON(t *testing.T) {
-	badReq := &http.Response{}
+	emptyResp := &http.Response{}
 	expectedNilInterfaceErr := fmt.Errorf("decodeJSON::v is nil")
 
-	actualNilInterfaceErr := decodeJSON(nil, badReq.Body)
-	assert.NotNil(t, actualNilInterfaceErr)
+	actualNilInterfaceErr := decodeJSON(nil, emptyResp.Body)
 	assert.Equal(t, expectedNilInterfaceErr, actualNilInterfaceErr)
 
-	badInterface := map[string]string{}
+	emptyInterface := map[string]string{}
 	expectedNilBodyErr := fmt.Errorf("decodeJSON::body is nil")
 
-	actualNilBodyErr := decodeJSON(badInterface, nil)
-	assert.NotNil(t, actualNilBodyErr)
+	actualNilBodyErr := decodeJSON(emptyInterface, nil)
 	assert.Equal(t, expectedNilBodyErr, actualNilBodyErr)
+}
 
-	badReq.Body = io.NopCloser(bytes.NewBufferString(`"{'test': 'bad}`))
+// TestEOFDecodeJSON ensures that EOF errors are handled
+func TestEOFDecodeJSON(t *testing.T) {
+	emptyInterface := map[string]string{}
+	eofReq := &http.Response{
+		Body: io.NopCloser(bytes.NewBufferString(`"{'test': 'eof}`)),
+	}
 
-	actualNilBodyDecoderErr := decodeJSON(badInterface, badReq.Body)
-	assert.NotNil(t, actualNilBodyDecoderErr)
-	assert.Equal(t, io.ErrUnexpectedEOF, actualNilBodyDecoderErr)
+	actualEOFBodyErr := decodeJSON(emptyInterface, eofReq.Body)
+	assert.Equal(t, io.ErrUnexpectedEOF, actualEOFBodyErr)
+}
+
+// TestDecodeJSON ensures valid JSON is handled
+func TestDecodeJSON(t *testing.T) {
+	expected := map[string]string{"hello": "world!"}
+
+	actual := make(map[string]string)
+
+	validJSON := bytes.NewBufferString(`{"hello": "world!"}`)
+	err := decodeJSON(&actual, io.NopCloser(validJSON))
+	assert.Nil(t, err)
+	assert.Equal(t, actual, expected)
 }

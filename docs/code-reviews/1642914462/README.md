@@ -79,23 +79,24 @@ multi-stage build and using a `scratch` image. The current image size is
 
 The `addr` variable is hardcoded. The implementation of route handlers is
 split between `main.go` and `handlers.go`. No check to ensure `tpl`
-variable is not `nil`. Missing route for `getHeartbeat` handler.
+variable is not `nil`. Tests of files using the `tpl` variable will fail,
+needs to be moved to init function. Missing route for `getHeartbeat` handler.
 
 **TODO**
 
 * [X] Add check to see if `tpl` is `nil`
+* [X] Shift `tpl` assignment to `init` function
 * [X] Refactor `addr` to get `HOST` and `PORT` env variables
 * [X] Refactor route handler logic entirely to `handlers.go`
 * [X] Add `getHeartbeat` to the router
 
 ## cmd/ui/models.go
 
-Missing test file. `cmd/ui` is a minimal web UI to showcase a frontend
-for the REST interface, so nothing should be public.
+`cmd/ui` is a minimal web UI to showcase a frontend for the REST
+interface, so nothing should be public.
 
 **TODO**
 
-* [X] Create `models_test.go`
 * [X] Refactor all structs to be private
 	* [X] `BookResp`
 	* [X] `BooksResp`
@@ -107,17 +108,27 @@ Missing test file. The `localIP` and `dockerIP` variables are hardcoded.
 The `client` variable is using `InsecureSkipVerify: true`, which "should
 only be used for testing or in combination with VerifyConnection or
 VerifyPeerCertificate". [[source](https://pkg.go.dev/crypto/tls#Config)]
-Apply DRY to for the request logic.
+Apply DRY to for the request logic. The `handlers.go` file is too large,
+and should be refactored out into respective handler files.
 
 **TODO**
 
-* [ ] Create `handlers_test.go`
-* [ ] Refactor `localIP` to get `localHOST` and `localPORT` env variables
-* [ ] Refactor `dockerIP` to get `dockerHOST` and `dockerPORT` env variables
-* [ ] Remove `Transport` from `client`
-* [ ] Refactor the logic for marshaling the JSON data, creating an
-`http.Request`, setting the `Content-Type`, and making the request into a
-utility function
+* [X] Refactor `handlers.go` into respective handler/test files
+	* [X] `create.go`
+	* [X] `retrieve.go`
+	* [X] `update.go`
+	* [X] `heartbeat.go`
+* [ ] Create test files for handlers
+	* [ ] `create_test.go`
+	* [ ] `retrieve_test.go`
+	* [ ] `delete_test.go`
+	* [ ] `heartbeat_test.go`
+* [X] Refactor `localIP` to get `localHOST` and `localPORT` env variables
+* [X] Refactor `dockerIP` to get `dockerHOST` and `dockerPORT` env variables
+* [X] Remove `Transport` from `client`
+* [X] Refactor DRY logic to `utils.go`
+		* [X] Logic for decoding JSON data
+		* [ ] Logic for making REST API requests
 
 ## cmd/ui/utils.go
 
@@ -127,30 +138,27 @@ ensure they are not `nil` in `decodeJSON`.
 **TODO**
 
 * [X] Create `utils_test.go`
+* [X] Create `utils.go`
 * [X] Add check of `v` and `body` if `nil` in `decodeJSON`
 
 ## cmd/ui/static/js/index.js
 
-The `backend` variable is hardcoded to `http://localhost:9001`. User
-should be notified if an error occurs in `deleteReq`.
+User should be notified if an error occurs in `deleteReq`.
 
 **TODO**
 
-* [ ] Implement scanning of localhost IP addresses and assign active
-address to `backend` variable
-* [ ] Add `alert` to `catch` in `deleteReq`
+* [X] Add `alert` to `catch` in `deleteReq`
 
 ## cmd/ui/templates/header.html
 
-Title tag should be dynamic. The `favicon.svg` file should be inlined,
-which will remove the current `~85 ms` load time. It will also remove the
-double request since the current implementation is using `golang.org`
-which redirects to `go.dev`.
+The `favicon.svg` file should be in `static`, which remove a few things.
+First, it will remove the dependency on internet. Second, it will remove
+the current double requests being made, since the current implementation
+is using `golang.org` which redirects to `go.dev`.
 
 **TODO**
 
-* [ ] Refactor `<title></title>` to a Go `text/template` Action
-* [ ] Inline `favicon.svg`
+* [X] Change href of `favicon.svg` to use `/static/favicon.svg`
 
 ## internal/api/api.go
 

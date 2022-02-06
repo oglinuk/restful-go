@@ -6,17 +6,16 @@ import (
 	"io"
 )
 
-func decodeJSON(v interface{}, body io.ReadCloser) error {
+func decodeJSON(v interface{}, data io.ReadCloser) error {
 	if v == nil {
 		return fmt.Errorf("decodeJSON::v is nil")
 	}
 
-	if body == nil {
+	if data == nil {
 		return fmt.Errorf("decodeJSON::body is nil")
 	}
-	defer body.Close()
 
-	err := json.NewDecoder(body).Decode(&v)
+	err := json.NewDecoder(data).Decode(&v)
 	if err != nil {
 		return err
 	}
